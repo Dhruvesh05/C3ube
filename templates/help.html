@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Page</title>
+    <style>
+
+        /* Reset some default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+            min-height: 100vh; /* Ensure body takes full height */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Push footer to the bottom */
+        }
+
+        header {
+            background-color: #0066cc;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            justify-content: center;
+            align-items: center;
+            height: 150px; /* Adjusted height to accommodate the title and button */
+        }
+
+        header h1 {
+            margin-bottom: 10px;
+            font-size: 42px;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        header a:hover {
+            text-decoration: underline;
+        }
+
+        section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            flex-grow: 1; /* Allow section to take available space */
+        }
+
+        h2 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .foot-con {
+            margin-top: 30px;
+        }
+
+        .foot-con p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .ema {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .ema ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .ema ul li {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        #cha {
+            font-size: 14px;
+            color: #666;
+        }
+
+        p1{
+            color: #0066cc ;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center; /* Center the button */
+            align-items: center;    /* Center vertically */
+            width: 100%;
+        }
+
+        .billing {
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 500;
+            border: 2px solid white;
+            font-size: 22px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .billing:hover {
+            background-color: orange;
+            color: black;
+        }   
+
+        footer {
+            height: 35px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.9rem;
+            width: 100%;
+            position: relative; /* Removes the fixed position */
+            bottom: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Help Page</h1>
+        <div class="button-group">
+            <a href="{% url 'billing-page' %}" class="billing">Back to Billing</a>  <!-- Link back to the billing page -->
+        </div>
+    </header>
+    
+    <section>
+        <h2>Need help with your billing?</h2>
+        <p>For assistance, please contact support at <p1 class="blue-text">support@example.com</p1> or call us at <p1 class="blue-text">+123 456 7890   </p1>.</p>
+        <p>Frequently asked questions:</p>
+        <ul>
+            <li>How do I pay my bill?</li>
+            <li>How do I view my past bills?</li>
+            <li>How do I update my payment information?</li>
+        </ul>
+
+        <div class="foot-con">
+            <h2>WHO ARE WE?</h2>
+            <p id="wow"> We are Bharat Commercial Centre. We Supply Gas Cylinders of various categories like for Medical, Industrial purposes. We've been in this business for 20 years.</p>
+        </div>
+        
+        <div class="ema">
+            <h2>CONTACT US</h2>
+           <p id="cha"> <ul>
+                <li>
+                    Contact No.:- 8668752399
+                </li>
+                <li>E-mail Us:- bcc@gmail.com</li>
+                <li>Instagram Handle : Bccylinders</li>
+            </ul></p>
+        </div>
+
+    </section>
+
+    <footer>
+        &copy; 2024 C3ube. All rights reserved.
+    </footer>
+</body>
+</html>

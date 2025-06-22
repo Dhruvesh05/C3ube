@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <a href="insert-stock.html"></a>
+    <a href="billing-page.html"></a>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        h1{
+
+            color: white;
+            font-weight: 750;
+
+        }
+        
+        h2 {
+            color: #444;
+            font-weight: 700;
+        }
+
+            /* Header section with flexbox for logout button alignment */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #001F3F;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid orange;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            border-radius: 40px;
+            text-decoration: none;
+            border: 2px solid orange;
+            font-size: 22px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #007BFF;
+            border-color: black;
+        }
+
+        /* Main content container */
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            gap: 20px;
+            flex: 1; /* Allow the main content to fill space */
+        }
+
+        .section {
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Categories section on the left */
+        .categories {
+            flex: 0 0 15%; /* Fixed width for categories */
+        }
+
+        /* Items section in a 3x3 grid */
+        .items {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns */
+            grid-template-rows: repeat(3, auto); /* Auto rows */
+            gap: 20px;
+        }
+
+        /* Bill section on the right */
+        .bill {
+            flex: 0 0 20%; /* Fixed width for the bill */
+        }
+
+        .arrow-btn {
+            cursor: pointer;
+            padding: 10px 20px;
+            text-decoration: none;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .arrow-btn:hover {
+            background-color: green;
+        }
+
+        .card {
+            /* margin-bottom: 15px; */
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .card img {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .card p {
+            font-size: 16px;
+            color: #555;
+            text-align: center;
+        }
+
+        .card button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .card button:hover {
+            background-color: #218838;
+        }
+
+        #categories-list button {
+            background-color: orange;
+            color: black;
+            border: 2px;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border: 2px solid black;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #categories-list button:hover {
+            border-color: orange;
+            background-color: black;
+            color: white;
+        }
+
+        #bill-list li {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+
+        .bill-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        #total-price {
+            font-weight: bold;
+            color: #ff5722;
+            font-size: 18px;
+        }
+
+        /* Footer Styling */
+        footer {
+            position: fixed;
+            height: 35px;
+            bottom: 0;
+            width: 100%;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.9rem;
+        }
+
+
+        /* Styling for the grid container */
+        .grid-container {
+            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Creates a 3-column grid */
+            grid-gap: 20px; /* Adds space between items */
+            padding: 20px;
+            justify-content: center; /* Centers the grid in the container */
+        }
+
+        /* Styling for individual grid items (cards) */
+        .grid-item {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+            background-color: whitesmoke;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-item img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .quantity-input {
+            margin-top: 10px;
+        }
+
+        .quantity-input input {
+            width: 50px;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .quantity-input button {
+            padding: 5px 10px;
+            margin-left: 5px;
+        }
+
+
+        /* Input box and quantity controls for each card */
+        .quantity-input {
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quantity-input input[type="number"] {
+            width: 50px;
+            padding: 5px;
+            margin-right: 10px;
+            text-align: center;
+            border-radius: 15px;
+            font-size: 1rem;
+        }
+
+        .quantity-input button {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 15px;
+            font-size: 1rem;
+        }
+
+        .quantity-input button:hover {
+            background-color: black;
+        }
+
+        .navigation {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Help Button */
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px; /* Adds some spacing between the buttons */
+        }
+
+        .logout-btn, .help-btn {
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 500;
+            border: 1px solid white;
+            font-size: 22px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #007BFF;
+            /* border-color: black; */
+        }   
+
+        .help-btn {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 40px;
+            text-decoration: none;
+            border: 1px solid white;
+            font-size: 22px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .help-btn:hover {
+            background-color: #007BFF;
+            /* border-color: black; */
+        }
+
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Billing Page</h1>
+        <div class="button-group">
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+            <a href="{% url 'help' %}" class="help-btn">Help</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Section One: Categories -->
+        <div class="section categories">
+            <div id="categories-div">
+                <h2>Categories</h2>
+                <ul id="categories-list">
+                    <li><button onclick="filterItems('all')">All Categories</button></li>
+                    {% for category in categories %}
+                    <li><button onclick="filterItems('{{ category }}')">{{ category }}</button></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section Two: Items -->
+        <div class="section items">
+            <div id="items-div">
+                <h2>Items</h2>
+                <div id="items-list" class="grid-container">
+                    {% for item in items %}
+                    <div class="grid-item">
+                        <div class="card" data-category="{{ item.category }}">
+                            <img src="{{ item.image.url }}" alt="{{ item.name }}" width="100">
+                            <p>{{ item.name }} - ${{ item.price }}</p>
+                            <!-- Quantity Input -->
+                            <div class="quantity-input">
+                                <input type="number" id="quantity-{{ item.id }}" value="1" min="1">
+                                <button onclick="addToBill('{{ item.name|escapejs }}', {{ item.price }}, {{ item.id }})">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Section Three: Bill -->
+        <div class="section bill">
+            <div id="bill-div">
+                <h2>Bill</h2>
+                <ul id="bill-list"></ul>
+                <p>Total: $<span id="total-price">0</span></p>
+                <form id="payment-form" action="{% url 'payment' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" id="bill-items" name="bill_items">
+                    <input type="hidden" id="total-amount" name="total_amount">
+                    <button type="submit" class="arrow-btn">Pay</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2024 C3ube. All rights reserved.
+    </footer>
+
+    <div class="navigation">
+        <a href="{% url 'insert-stock' %}" class="arrow-btn">⬅ Back to Insert Stock</a>
+    </div>
+
+    <script>
+        // Function to filter items based on category
+        function filterItems(category) {
+            const cards = document.querySelectorAll('.card'); // Get all the item cards
+
+            cards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category'); // Get the card's category
+
+                if (category === 'all' || cardCategory === category) {
+                    card.style.display = 'block'; // Show card if it matches the category or if 'all' is selected
+                } else {
+                    card.style.display = 'none'; // Hide card if it doesn't match the selected category
+                }
+            });
+        }
+
+        function addToBill(name, price, itemId) {
+            const billList = document.getElementById('bill-list');
+            const totalPriceElem = document.getElementById('total-price');
+            const billItemsInput = document.getElementById('bill-items');
+            const totalAmountInput = document.getElementById('total-amount');
+
+            // Get quantity input value
+            const quantity = document.getElementById(`quantity-${itemId}`).value;
+            const totalItemPrice = price * quantity;
+
+            // Create a new list item and append it to the bill list
+            const newItem = document.createElement('li');
+            newItem.textContent = `${name} x ${quantity} - $${totalItemPrice.toFixed(2)}`;
+            billList.appendChild(newItem);
+
+            // Update total price
+            let totalPrice = parseFloat(totalPriceElem.textContent);
+            totalPrice += totalItemPrice;
+            totalPriceElem.textContent = totalPrice.toFixed(2);
+
+            // Update the hidden inputs for form submission
+            const billItems = Array.from(billList.children).map(item => item.textContent);
+            billItemsInput.value = billItems.join(',');  // Join items with a comma
+            totalAmountInput.value = totalPriceElem.textContent;  // Update total amount
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById('payment-form').onsubmit = function() {
+                // Any additional actions you need to take on form submission can go here
+            };
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <a href="billing-page.html"></a>
+    <a href="login.html"></a>
+    <title>Insert Stock & Billing</title>
+    <style>
+        body {
+            
+            height: 100%;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: row;
+            margin-top: 10%;
+            margin-left: 30%;
+            gap: 20px;
+            background-color: black;
+        }
+        /* Styles for stock form */
+        .form-container {
+            align-items: center;
+            width: 50%;
+            padding: 40px;
+            border: 5px solid  orangered;
+            box-shadow: 2in;
+            border-radius: 20px;
+            background-color: #007BFF;
+        }
+        .form-container h2 {
+            font-size: 40px;
+            font-weight: 600;
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif ;
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        label{
+            font-weight: 600;
+            margin-left: 10px;
+            color: black;
+        }
+        .form-container input, .form-container button {
+            width: 100%;
+            /* padding: 10px; */
+            color: black;
+            height: 30px;
+            border: black;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            
+        }
+        .form-container button {
+            height: 50px;
+            font-weight: 600;
+            font-size: 20px;
+            margin-left: 25%;
+            width: 50%;
+            background-color: green;
+            color: white;
+            border-width: 2px;
+            border-color: black;
+
+            border-radius: 30px;
+        }
+
+        /* Billing Page Styles */
+        .billing-page {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 70%;
+        }
+
+        .categories, .items, .bill {
+            width: 30%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+        }
+
+        .items .item-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .bill-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Add Stock</h2>
+    <form id="stockForm" enctype="multipart/form-data">
+        <label for="category">Category</label>
+        <input type="text" id="category" name="category" required>
+
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="price">Price</label>
+        <input type="number" id="price" name="price" required>
+
+        <label for="image">Image</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+
+<script>
+    // Handling stock form submission for stock insertion
+    document.getElementById('stockForm').addEventListener('submit', function (e) {
+        e.preventDefault();  // Prevent form submission
+        let formData = new FormData();
+        formData.append('category', document.getElementById('category').value);
+        formData.append('name', document.getElementById('name').value);
+        formData.append('price', document.getElementById('price').value);
+        formData.append('image', document.getElementById('image').files[0]);
+
+        fetch("{% url 'insert-stock' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'Stock added successfully!') {
+                alert('Stock added successfully!');
+                document.getElementById('stockForm').reset();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding stock.');
+        });
+    });
+
+    // Loading categories and items
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fetch and load categories
+        fetch("{% url 'get-categories' %}")
+        .then(response => response.json())
+        .then(data => {
+            const categoriesList = document.getElementById('categoriesList');
+            categoriesList.innerHTML = '';
+            data.categories.forEach(category => {
+                const li = document.createElement('li');
+                li.textContent = category;
+                li.addEventListener('click', () => loadItemsByCategory(category));
+                categoriesList.appendChild(li);
+            });
+        });
+
+        // Fetch and load all items
+        loadItemsByCategory(null);
+
+        // Load items by category
+        function loadItemsByCategory(category) {
+            fetch("{% url 'get-items' %}" + (category ? `?category=${category}` : ''))
+            .then(response => response.json())
+            .then(data => {
+                const itemsContainer = document.getElementById('itemsContainer');
+                itemsContainer.innerHTML = '';
+                data.items.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'item-card';
+                    card.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" width="100" height="100">
+                        <h4>${item.name}</h4>
+                        <p>Price: $${item.price}</p>
+                    `;
+                    card.addEventListener('click', () => addToBill(item));
+                    itemsContainer.appendChild(card);
+                });
+            });
+        }
+
+        // Add item to bill
+        function addToBill(item) {
+            const billContainer = document.getElementById('billContainer');
+            const billItem = document.createElement('div');
+            billItem.className = 'bill-item';
+            billItem.innerHTML = `
+                <span>${item.name}</span>
+                <span>$${item.price}</span>
+            `;
+            billContainer.appendChild(billItem);
+            updateTotal(item.price);
+        }
+
+        // Update total amount in the bill
+        function updateTotal(amount) {
+            const totalAmountElem = document.getElementById('totalAmount');
+            const currentTotal = parseFloat(totalAmountElem.textContent);
+            totalAmountElem.textContent = (currentTotal + amount).toFixed(2);
+        }
+    });
+</script>
+</body>
+</html>

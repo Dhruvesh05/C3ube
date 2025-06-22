@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Receipt</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f4f8; /* Soft background color */
+            flex-direction: column;
+            margin: 0; /* Remove default margin */
+            padding: 20px; /* Add padding */
+        }
+        h1 {
+            color: #4caf50; /* Header color */
+            margin-bottom: 30px; /* Space below header */
+            font-size: 32px; /* Increase header size */
+            text-align: center; /* Center align header */
+        }
+        .container {
+            text-align: center;
+            max-width: 400px; /* Limit container width */
+            width: 100%; /* Full width */
+            padding: 20px;
+            border-radius: 10px;
+            background: #ffffff; /* White background */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Soft shadow */
+        }
+        .receipt {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fafafa; /* Light gray background */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .receipt h2 {
+            margin-bottom: 20px;
+            font-size: 24px; /* Larger font size */
+            color: #333; /* Darker text color */
+        }
+        .receipt ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0; /* Remove default margin */
+        }
+        .receipt ul li {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd; /* Border below items */
+            color: #555; /* Dark gray color for items */
+        }
+        .total {
+            font-weight: bold;
+            color: #ff5722;
+            margin-top: 20px;
+            font-size: 20px; /* Slightly larger total font size */
+        }
+        .qr-container {
+            width: 200px;
+            height: 200px;
+            margin-top: 20px;
+            border-radius: 10px; /* Rounded corners */
+            border: 1px solid #ddd; /* Border around the box */
+            background-color: #fff; /* Background color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .qr-code {
+            width: 100%; /* Adjust image to fill the container */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 10px; /* Rounded corners for the image */
+        }
+        .scan-text {
+            color: #ff5722; /* Text color */
+            margin-top: 10px; /* Space above text */
+            font-size: 18px; /* Increase font size */
+            font-weight: bold; /* Make text bold */
+        }
+        button.arrow-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4caf50; /* Green background */
+            color: white; /* White text color */
+            font-size: 16px; /* Button font size */
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        button.arrow-btn:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>Payment Gateway</h1>
+    <div class="container">
+        <div class="receipt">
+            <h2>Receipt</h2>
+            <ul>
+                {% for item in bill_items %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+            <p class="total">Total: ${{ total_amount }}</p>
+        </div>
+
+        <!-- QR Code Container -->
+        <div class="qr-container">
+            <img src="C:\Users\dhruv\OneDrive\Desktop\homepage\djangoenv\hpage\media\images\animebg.jpg" class="qr-code" alt="QR Code">
+        </div>
+
+        <!-- Scan It text outside the container -->
+        <div class="scan-text">Scan It</div>
+
+        <!-- Print the receipt -->
+        <button onclick="window.print();" class="arrow-btn">Print Receipt</button>
+    </div>
+    <script>
+        fetch('/payment/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                /* Replace this with the actual data being sent */
+                key1: 'value1',
+                key2: 'value2'
+            }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+
+        function downloadReceipt() {
+            const receiptContent = document.querySelector('.receipt').outerHTML;
+            const blob = new Blob([receiptContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'receipt.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
