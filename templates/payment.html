@@ -125,33 +125,40 @@
         <button onclick="window.print();" class="arrow-btn">Print Receipt</button>
     </div>
     <script>
-        fetch('/payment/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                /* Replace this with the actual data being sent */
-                key1: 'value1',
-                key2: 'value2'
-            }),
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
-
-        function downloadReceipt() {
-            const receiptContent = document.querySelector('.receipt').outerHTML;
-            const blob = new Blob([receiptContent], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'receipt.html';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+    // Function to get CSRF token from cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Check if cookie name matches
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
         }
-    </script>
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
+
+    // Send POST request with CSRF token
+    fetch('/payment/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken  // ✅ Add this line
+        },
+        body: JSON.stringify({
+            key1: 'value1',
+            key2: 'value2'
+        }),
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+</script>
 </body>
 </html>
